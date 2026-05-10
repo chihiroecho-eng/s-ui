@@ -1,22 +1,13 @@
-name: Release S-UI
+name: 发布 S-UI
 
 on:
   workflow_dispatch:
-  release:
-    types: [published]
-  push:
-    branches:
-      - main
-    tags:
-      - "*"
-    paths:
-      - '.github/workflows/release.yml'
-      - 'frontend/**'
-      - '**.sh'
-      - '**.go'
-      - 'go.mod'
-      - 'go.sum'
-      - 's-ui.service'
+    inputs:
+      tag:
+        description: "发布标签"
+        required: true
+        default: "v1.4.1"
+        type: string
 
 env:
   NODE_VERSION: "25"
@@ -28,34 +19,35 @@ jobs:
   build-frontend:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository (frontend only)
+      - name: 检出仓库（仅前端）
         uses: actions/checkout@v6.0.2
         with:
+          ref: ${{ inputs.tag }}
           submodules: recursive
           fetch-depth: 1
 
-      - name: Setup Node.js
+      - name: 设置 Node.js
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
 
-      - name: Build frontend
+      - name: 构建前端
         run: |
           cd frontend
           npm install
           npm run build
           cd ..
 
-      - name: Upload frontend dist
+      - name: 上传前端 dist
         uses: actions/upload-artifact@v7
         with:
           name: frontend-dist
           path: frontend/dist/
 
   build-linux:
-    name: build-${{ matrix.platform }}
+    name: 构建-${{ matrix.platform }}
     needs: build-frontend
     strategy:
       fail-fast: false
@@ -70,23 +62,25 @@ jobs:
           - { platform: s390x, arch: s390x, bootlin: s390x-z13, naive: false }
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: 检出仓库
         uses: actions/checkout@v6.0.2
+        with:
+          ref: ${{ inputs.tag }}
 
-      - name: Download frontend dist
+      - name: 下载前端 dist
         uses: actions/download-artifact@v8
         with:
           name: frontend-dist
           path: web/html
 
-      - name: Setup Go
+      - name: 设置 Go
         uses: actions/setup-go@v6
         with:
           cache: false
           go-version-file: go.mod
 
-      # Naive platforms: use cronet toolchain only (no Bootlin).
-      - name: Clone cronet-go (cronet toolchain for naive)
+      # Naive 平台：仅使用 cronet 工具链（不使用 Bootlin）。
+      - name: 克隆 cronet-go（naive 使用的 cronet 工具链）
         if: matrix.naive
         run: |
           set -e
@@ -96,7 +90,7 @@ jobs:
           git -C ~/cronet-go checkout FETCH_HEAD
           git -C ~/cronet-go submodule update --init --recursive --depth=1
 
-      - name: Regenerate Debian keyring (cronet sysroot)
+      - name: 重新生成 Debian keyring（cronet sysroot）
         if: matrix.naive
         run: |
           set -e
@@ -104,7 +98,7 @@ jobs:
           cd ~/cronet-go
           GPG_TTY=/dev/null ./naiveproxy/src/build/linux/sysroot_scripts/generate_keyring.sh
 
-      - name: Cache Chromium toolchain
+      - name: 缓存 Chromium 工具链
         if: matrix.naive
         id: cache-chromium-toolchain
         uses: actions/cache@v5
@@ -116,7 +110,7 @@ jobs:
             ~/cronet-go/naiveproxy/src/out/sysroot-build/
           key: chromium-toolchain-${{ matrix.platform }}-musl-${{ env.CRONET_GO_VERSION }}
 
-      - name: Build cronet lib and set toolchain env (CC, CXX, CGO_LDFLAGS, PATH)
+      - name: 构建 cronet 库并设置工具链环境（CC、CXX、CGO_LDFLAGS、PATH）
         if: matrix.naive
         run: |
           set -e
@@ -128,24 +122,24 @@ jobs:
             echo "$line" >> $GITHUB_ENV
           done
 
-      - name: Set Go build env (all platforms)
+      - name: 设置 Go 构建环境（所有平台）
         run: |
           echo "CGO_ENABLED=1" >> $GITHUB_ENV
           echo "GOOS=linux" >> $GITHUB_ENV
           echo "GOARCH=${{ matrix.arch }}" >> $GITHUB_ENV
           if [ -n "${{ matrix.goarm }}" ]; then echo "GOARM=${{ matrix.goarm }}" >> $GITHUB_ENV; fi
 
-      # Non-naive platforms only: Bootlin musl (armv5, s390x).
-      - name: Set up Bootlin musl (armv5, s390x)
+      # 仅非 naive 平台：Bootlin musl（armv5、s390x）。
+      - name: 设置 Bootlin musl（armv5、s390x）
         if: ${{ matrix.naive != true }}
         run: |
           set -e
           BOOTLIN_ARCH="${{ matrix.bootlin }}"
-          echo "Resolving Bootlin musl toolchain for arch=$BOOTLIN_ARCH (platform=${{ matrix.platform }})"
+          echo "正在解析 arch=$BOOTLIN_ARCH 的 Bootlin musl 工具链（平台=${{ matrix.platform }}）"
           TARBALL_BASE="${{ env.BOOTLIN_BASE_URL }}/$BOOTLIN_ARCH/tarballs/"
           TARBALL_URL=$(curl -fsSL "$TARBALL_BASE" | grep -oE "${BOOTLIN_ARCH}--musl--stable-[^\"]+\\.tar\\.xz" | sort -r | head -n1)
-          [ -z "$TARBALL_URL" ] && { echo "Failed to locate Bootlin musl toolchain for arch=$BOOTLIN_ARCH" >&2; exit 1; }
-          echo "Downloading: $TARBALL_URL"
+          [ -z "$TARBALL_URL" ] && { echo "未找到 arch=$BOOTLIN_ARCH 的 Bootlin musl 工具链" >&2; exit 1; }
+          echo "正在下载：$TARBALL_URL"
           cd /tmp
           curl -fL -sS -o "$(basename "$TARBALL_URL")" "$TARBALL_BASE/$TARBALL_URL"
           tar -xf "$(basename "$TARBALL_URL")"
@@ -154,7 +148,7 @@ jobs:
           BIN_DIR="$TOOLCHAIN_DIR/bin"
           echo "PATH=$BIN_DIR:$PATH" >> $GITHUB_ENV
           CC=$(find "$BIN_DIR" -maxdepth 1 \( -name '*-gcc.br_real' -o -name '*-gcc' \) -type f -executable 2>/dev/null | grep -v g++ | head -n1)
-          [ -z "$CC" ] && { echo "No gcc found in $BIN_DIR" >&2; exit 1; }
+          [ -z "$CC" ] && { echo "在 $BIN_DIR 中未找到 gcc" >&2; exit 1; }
           echo "CC=$(realpath "$CC")" >> $GITHUB_ENV
           SYSROOT=""
           F=$(find "$TOOLCHAIN_DIR" -name "libc-header-start.h" 2>/dev/null | head -1)
@@ -164,38 +158,35 @@ jobs:
             echo "CGO_LDFLAGS=--sysroot=$SYSROOT -static" >> $GITHUB_ENV
           fi
 
-      - name: Build s-ui
+      - name: 构建 s-ui
         run: |
           set -e
           BUILD_TAGS="with_quic,with_grpc,with_utls,with_acme,with_gvisor,badlinkname,tfogo_checklinkname0,with_tailscale"
           [ "${{ matrix.naive }}" = "true" ] && BUILD_TAGS="${BUILD_TAGS},with_naive_outbound,with_musl"
           go build -ldflags="-w -s -checklinkname=0 -linkmode external -extldflags '-static'" -tags "$BUILD_TAGS" -o sui main.go
           file sui
-          ldd sui 2>/dev/null || echo "Static binary confirmed"
+          ldd sui 2>/dev/null || echo "已确认静态二进制文件"
 
           mkdir s-ui
           cp sui s-ui/
           cp s-ui.service s-ui/
           cp s-ui.sh s-ui/
 
-      - name: Package
+      - name: 打包
         run: tar -zcvf s-ui-linux-${{ matrix.platform }}.tar.gz s-ui
 
-      - name: Upload artifact
+      - name: 上传构建产物
         uses: actions/upload-artifact@v7
         with:
           name: s-ui-linux-${{ matrix.platform }}
           path: ./s-ui-linux-${{ matrix.platform }}.tar.gz
           retention-days: 30
 
-      - name: Upload to Release
+      - name: 上传到 Release
         uses: svenstaro/upload-release-action@v2
-        if: |
-          (github.event_name == 'release' && github.event.action == 'published') ||
-          (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/'))
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name }}
+          tag: ${{ inputs.tag }}
           file: s-ui-linux-${{ matrix.platform }}.tar.gz
           asset_name: s-ui-linux-${{ matrix.platform }}.tar.gz
           prerelease: true

@@ -1,7 +1,6 @@
----
 services:
   s-ui:
-    image: alireza7/s-ui
+    image: admin8800/s-ui
     container_name: s-ui
     hostname: "s-ui"
     volumes:
@@ -15,8 +14,4 @@ services:
     networks:
       - s-ui
     entrypoint: "./entrypoint.sh"
-
-networks:
-  s-ui:
-    driver: bridge
   
