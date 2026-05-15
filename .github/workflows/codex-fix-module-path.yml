@@ -1,0 +1,79 @@
+name: Codex Fix Module Path
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/codex-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  fix-module-path:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Normalize fork module paths
+        run: |
+          set -e
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+
+          function walk(dir, out = []) {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              if (entry.name === '.git' || entry.name === 'node_modules') continue;
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) walk(full, out);
+              else out.push(full);
+            }
+            return out;
+          }
+
+          function replaceFile(file, replacer) {
+            if (!fs.existsSync(file)) return;
+            const before = fs.readFileSync(file, 'utf8');
+            const after = typeof replacer === 'function' ? replacer(before) : before.replaceAll(replacer[0], replacer[1]);
+            if (after !== before) fs.writeFileSync(file, after);
+          }
+
+          for (const file of walk('.').filter(f => f.endsWith('.go'))) {
+            replaceFile(file, ['github.com/admin8800/s-ui', 'github.com/chihiroecho-eng/s-ui']);
+          }
+
+          for (const file of ['.github/workflows/release.yml', 'build.sh']) {
+            replaceFile(file, text => text
+              .split('\n')
+              .filter(line => !line.includes("s#module github.com/chihiroecho-eng/s-ui#module github.com/admin8800/s-ui#"))
+              .filter(line => !line.includes("s#github.com/chihiroecho-eng/s-ui#github.com/admin8800/s-ui#g"))
+              .join('\n'));
+          }
+
+          replaceFile('Dockerfile', text => text
+            .replace("RUN sed -i 's#module github.com/chihiroecho-eng/s-ui#module github.com/admin8800/s-ui#' go.mod && \\\n    sed -i 's#github.com/chihiroecho-eng/s-ui#github.com/admin8800/s-ui#g' main.go && \\\n    if", 'RUN if'));
+
+          for (const file of ['docker-compose.yml', 'README.md']) {
+            replaceFile(file, ['ghcr.io/admin8800/s-ui', 'ghcr.io/chihiroecho-eng/s-ui']);
+          }
+
+          for (const file of ['.github/workflows/codex-fix-module-path.yml', '.github/codex-trigger']) {
+            if (fs.existsSync(file)) fs.rmSync(file);
+          }
+          NODE
+
+      - name: Commit cleanup
+        run: |
+          set -e
+          git config user.name "Codex"
+          git config user.email "codex@openai.com"
+          if git diff --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git add .
+          git commit -m "fix: align module path with fork"
+          git push
