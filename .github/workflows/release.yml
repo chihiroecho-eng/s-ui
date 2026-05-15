@@ -38,7 +38,7 @@ jobs:
       - name: 构建前端
         run: |
           cd frontend
-          npm install
+          npm ci
           npm run build
 
       - name: 上传前端构建产物
@@ -123,7 +123,7 @@ jobs:
           BOOTLIN_ARCH="${{ matrix.bootlin }}"
           echo "正在解析 arch=$BOOTLIN_ARCH 的 Bootlin musl 工具链（平台=${{ matrix.platform }}）"
           TARBALL_BASE="${{ env.BOOTLIN_BASE_URL }}/$BOOTLIN_ARCH/tarballs/"
-          TARBALL_URL=$(curl -fsSL "$TARBALL_BASE" | grep -oE "${BOOTLIN_ARCH}--musl--stable-[^\"]+\\.tar\\.xz" | sort -r | head -n1)
+          TARBALL_URL=$(curl -fsSL "$TARBALL_BASE" | grep -oE "${BOOTLIN_ARCH}--musl--stable-[^\"]+\.tar\.xz" | sort -r | head -n1)
           [ -z "$TARBALL_URL" ] && { echo "未找到 arch=$BOOTLIN_ARCH 的 Bootlin musl 工具链" >&2; exit 1; }
           echo "正在下载：$TARBALL_URL"
           cd /tmp
