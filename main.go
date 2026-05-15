@@ -6,8 +6,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/admin8800/s-ui/app"
-	"github.com/admin8800/s-ui/cmd"
+	"github.com/chihiroecho-eng/s-ui/app"
+	"github.com/chihiroecho-eng/s-ui/cmd"
 )
 
 func runApp() {
