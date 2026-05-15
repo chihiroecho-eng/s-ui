@@ -1,16 +1,14 @@
 ## S-UI
-基于`SagerNet/Sing-Box`构建的高级 Web 面板
+基于 `SagerNet/Sing-Box` 构建的高级 Web 面板。
 
-**提示：原`alireza0/s-ui`项目被Github官方封禁，本仓库是基于原版的最后一个版本`v 1.4.1`的完整备份，包含完整的前端和后端源码。**
+**提示：原 `alireza0/s-ui` 项目被 Github 官方封禁，本仓库是基于原版最后版本 `v1.4.1` 的完整备份，包含完整前端和后端源码。**
 
-**本仓库仅修改了默认语言和时区为中文，其他都对标原版无改动。你可以直接使用本仓库的脚本，也可以自行fork编译**
-
-Note: The original alireza0/s-ui project has been blocked and removed by GitHub. This repository is a complete backup based on the last version v1.4.1 of the original, containing the full front-end and back-end source code. This repository only modifies the default language and time zone to Chinese, with no other changes compared to the original. You can directly use the scripts from this repository, or fork and compile it yourself.
+**本仓库仅修改了默认语言和时区为中文，其他都对标原版无改动。你可以直接使用本仓库的脚本，也可以自行 fork 编译。**
 
 > **免责声明：** 本项目仅供个人学习与交流使用，请勿用于非法用途。
 
-
 ## 快速概览
+
 | 功能 | 是否支持 |
 | -------------------------------------- | :----------------: |
 | 多协议 | :heavy_check_mark: |
@@ -23,14 +21,15 @@ Note: The original alireza0/s-ui project has been blocked and removed by GitHub.
 | API 接口 | :heavy_check_mark: |
 
 ## 支持平台
+
 | 平台 | 架构 | 状态 |
 |----------|--------------|---------|
 | Linux | amd64, arm64, armv7, armv6, armv5, 386, s390x | 支持 |
 | Windows | amd64, 386, arm64 | 支持 |
 | macOS | amd64, arm64 | 实验性支持 |
 
-
 ## 默认安装信息
+
 - 面板端口：2095
 - 面板路径：/app/
 - 订阅端口：2096
@@ -40,52 +39,47 @@ Note: The original alireza0/s-ui project has been blocked and removed by GitHub.
 ## 安装或升级到最新版本
 
 ### Linux/macOS
+
 ```sh
 bash <(curl -Ls https://raw.githubusercontent.com/chihiroecho-eng/s-ui/main/install.sh)
 ```
 
-### Windows
-1. 从 [GitHub Releases](https://github.com/chihiroecho-eng/s-ui/releases/latest) 下载最新 Windows 版本。
-2. 解压 ZIP 文件。
-3. 以管理员身份运行 `install-windows.bat`。
-4. 按照安装向导操作。
+安装脚本会从 GitHub Releases 下载当前架构对应的资产，例如 `s-ui-linux-amd64.tar.gz`。发布新版本前，请先运行仓库的 `发布 S-UI` 工作流，确保 Release 中存在对应架构的安装包。
 
-## 安装旧版本
+### 安装指定版本
 
-**步骤 1：** 如果要安装指定旧版本，请在安装命令末尾追加带 `v` 的版本标签。例如版本 `v1.0.0`：
+```sh
+bash <(curl -Ls https://raw.githubusercontent.com/chihiroecho-eng/s-ui/main/install.sh) v1.4.1
+```
 
+版本号可以带 `v`，也可以不带 `v`。
 
 ## 手动安装
 
 ### Linux/macOS
-1. 根据你的系统和架构，从 GitHub 获取最新版本 S-UI：[https://github.com/chihiroecho-eng/s-ui/releases/latest](https://github.com/chihiroecho-eng/s-ui/releases/latest)
-2. **可选：** 获取最新版 `s-ui.sh`：[https://raw.githubusercontent.com/chihiroecho-eng/s-ui/main/s-ui.sh](https://raw.githubusercontent.com/chihiroecho-eng/s-ui/main/s-ui.sh)
-3. **可选：** 将 `s-ui.sh` 复制到 `/usr/bin/`，并执行 `chmod +x /usr/bin/s-ui`。
-4. 将 s-ui tar.gz 文件解压到你选择的目录，并进入解压后的目录。
-5. 将 `*.service` 文件复制到 `/etc/systemd/system/`，然后执行 `systemctl daemon-reload`。
-6. 使用 `systemctl enable s-ui --now` 启用开机自启并启动 S-UI 服务。
-7. 使用 `systemctl enable sing-box --now` 启动 sing-box 服务。
+
+1. 根据系统和架构，从 [GitHub Releases](https://github.com/chihiroecho-eng/s-ui/releases/latest) 下载对应安装包。
+2. 可选：获取最新管理脚本 [s-ui.sh](https://raw.githubusercontent.com/chihiroecho-eng/s-ui/main/s-ui.sh)。
+3. 解压 `s-ui-linux-*.tar.gz`。
+4. 将 `s-ui/s-ui.sh` 复制到 `/usr/bin/s-ui`，并执行 `chmod +x /usr/bin/s-ui`。
+5. 将 `s-ui` 目录复制到 `/usr/local/s-ui`。
+6. 将 `s-ui/s-ui.service` 复制到 `/etc/systemd/system/s-ui.service`。
+7. 执行 `systemctl daemon-reload`。
+8. 使用 `systemctl enable s-ui --now` 启用开机自启并启动 S-UI 服务。
 
 ### Windows
-1. 从 GitHub 获取最新 Windows 版本：[https://github.com/chihiroecho-eng/s-ui/releases/latest](https://github.com/chihiroecho-eng/s-ui/releases/latest)
-2. 下载适合的 Windows 包，例如 `s-ui-windows-amd64.zip`。
-3. 将 ZIP 文件解压到你选择的目录。
-4. 以管理员身份运行 `install-windows.bat`。
-5. 按照安装向导操作。
-6. 访问面板：http://localhost:2095/app
+
+Windows 安装包需要在 Release 中单独发布。下载对应 ZIP 后，以管理员身份运行安装脚本或手动启动二进制文件。
 
 ## 卸载 S-UI
 
 ```sh
 sudo -i
-
-systemctl disable s-ui  --now
-
-rm -f /etc/systemd/system/sing-box.service
+systemctl disable s-ui --now
+rm -f /etc/systemd/system/s-ui.service
 systemctl daemon-reload
-
 rm -fr /usr/local/s-ui
-rm /usr/bin/s-ui
+rm -f /usr/bin/s-ui
 ```
 
 ## 使用 Docker 安装
@@ -93,53 +87,60 @@ rm /usr/bin/s-ui
 <details>
    <summary>点击查看详情</summary>
 
-### 使用方式
-
-**步骤 1：** 安装 Docker
+### 安装 Docker
 
 ```shell
 curl -fsSL https://get.docker.com | sh
 ```
 
-**步骤 2：** 安装 S-UI
+### Docker Compose
 
-> Docker compose 方式
-
-```shell
+```yaml
 services:
   s-ui:
-    image: ghcr.io/chihiroecho-eng/s-ui
+    image: ghcr.io/chihiroecho-eng/s-ui:latest
     container_name: s-ui
     hostname: "s-ui"
     network_mode: host
     volumes:
       - "./db:/app/db"
-      - "./cert:/app/cert"
+      - "./cert:/root/cert"
     tty: true
     restart: unless-stopped
-    entrypoint: "./entrypoint.sh"
 ```
-`docker compose up -d`
 
-> 直接使用 docker
+```shell
+docker compose up -d
+```
+
+### Docker CLI
 
 ```shell
 mkdir s-ui && cd s-ui
 
 docker run -itd \
     --network host \
-    -v $PWD/db/:/app/db/ \
-    -v $PWD/cert/:/root/cert/ \
+    -v "$PWD/db/:/app/db/" \
+    -v "$PWD/cert/:/root/cert/" \
     --name s-ui \
     --restart=unless-stopped \
-    ghcr.io/chihiroecho-eng/s-ui
+    ghcr.io/chihiroecho-eng/s-ui:latest
 ```
 
-> 自行构建镜像
+### 自行构建镜像
+
+普通本机构建默认构建 `linux/amd64`：
 
 ```shell
 git clone https://github.com/chihiroecho-eng/s-ui
+cd s-ui
 docker build -t s-ui .
+```
+
+多架构构建建议使用 buildx：
+
+```shell
+docker buildx build --platform linux/amd64,linux/arm64 -t s-ui .
 ```
 
 </details>
@@ -150,70 +151,37 @@ docker build -t s-ui .
    <summary>点击查看详情</summary>
 
 ### 构建并运行完整项目
+
 ```shell
 ./runSUI.sh
 ```
 
-### 克隆仓库
+### 前端
+
+前端代码请查看 [frontend](frontend)。
+
+### 后端
+
+请先至少构建一次前端。
+
 ```shell
-# 克隆仓库
-git clone https://github.com/chihiroecho-eng/s-ui
-```
+cd frontend
+npm ci
+npm run build
 
-### - 前端
-
-前端代码请查看 [frontend](frontend)
-
-### - 后端
-> 请先至少构建一次前端。
-
-构建后端：
-```shell
-# 删除旧的前端编译文件
+cd ..
 rm -fr web/html/*
-# 应用新的前端编译文件
-cp -R frontend/dist/ web/html/
-# 构建
+cp -R frontend/dist/. web/html/
 go build -o sui main.go
-```
-
-运行后端（在仓库根目录执行）：
-```shell
 ./sui
 ```
 
 </details>
 
-## 语言
-
-- 英语
-- 波斯语
-- 越南语
-- 简体中文
-- 繁体中文
-- 俄语
-
-## 功能
-
-- 支持的协议：
-  - 通用协议：Mixed、SOCKS、HTTP、HTTPS、Direct、Redirect、TProxy
-  - 基于 V2Ray 的协议：VLESS、VMess、Trojan、Shadowsocks
-  - 其他协议：ShadowTLS、Hysteria、Hysteria2、Naive、TUIC
-- 支持 XTLS 协议。
-- 提供高级流量路由界面，支持 PROXY Protocol、External、透明代理、SSL 证书和端口配置。
-- 提供高级入站和出站配置界面。
-- 支持客户端流量上限和到期时间。
-- 显示在线客户端、入站、出站流量统计和系统状态监控。
-- 订阅服务支持添加外部链接和订阅。
-- Web 面板和订阅服务支持 HTTPS 安全访问（需自行提供域名和 SSL 证书）。
-- 深色/浅色主题。
-
 ## 环境变量
 
 <details>
   <summary>点击查看详情</summary>
-
-### 使用方式
 
 | 变量 | 类型 | 默认值 |
 | -------------- | :--------------------------------------------: | :------------ |
@@ -227,10 +195,9 @@ go build -o sui main.go
 
 ## SSL 证书
 
-<details>
-  <summary>点击查看详情</summary>
+Docker 部署时，证书目录建议挂载到容器内 `/root/cert`，以便与管理脚本默认生成路径保持一致。
 
-### Certbot
+### Certbot 示例
 
 ```bash
 snap install core; snap refresh core
@@ -239,7 +206,5 @@ ln -s /snap/bin/certbot /usr/bin/certbot
 
 certbot certonly --standalone --register-unsafely-without-email --non-interactive --agree-tos -d <你的域名>
 ```
-
-</details>
 
 #### 鸣谢原作者：alireza0
