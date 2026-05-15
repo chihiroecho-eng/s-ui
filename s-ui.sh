@@ -51,7 +51,7 @@ confirm() {
 confirm_restart() {
     confirm "重启 ${1} 服务" "y"
     if [[ $? == 0 ]]; then
-        restart
+        restart "$1"
     else
         show_menu
     fi
@@ -204,7 +204,7 @@ start() {
     check_status $1
     if [[ $? == 0 ]]; then
         echo ""
-        LOGI -e "${1} 正在运行，无需再次启动；如果需要重启，请选择重启"
+        LOGI "${1} 正在运行，无需再次启动；如果需要重启，请选择重启"
     else
         systemctl start $1
         sleep 2
@@ -229,7 +229,7 @@ stop() {
     else
         systemctl stop $1
         sleep 2
-        check_status
+        check_status $1
         if [[ $? == 1 ]]; then
             LOGI "${1} 停止成功"
         else
@@ -385,7 +385,7 @@ show_enable_status() {
 
 check_s-ui_status() {
     count=$(ps -ef | grep "sui" | grep -v "grep" | wc -l)
-    if [[ count -ne 0 ]]; then
+    if [[ $count -ne 0 ]]; then
         return 0
     else
         return 1
