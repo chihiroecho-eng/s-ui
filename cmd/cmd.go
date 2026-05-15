@@ -6,8 +6,8 @@ import (
 	"os"
 	"runtime/debug"
 
-	"github.com/admin8800/s-ui/cmd/migration"
-	"github.com/admin8800/s-ui/config"
+	"github.com/chihiroecho-eng/s-ui/cmd/migration"
+	"github.com/chihiroecho-eng/s-ui/config"
 )
 
 func ParseCmd() {

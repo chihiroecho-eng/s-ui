@@ -3,14 +3,14 @@ package app
 import (
 	"log"
 
-	"github.com/admin8800/s-ui/config"
-	"github.com/admin8800/s-ui/core"
-	"github.com/admin8800/s-ui/cronjob"
-	"github.com/admin8800/s-ui/database"
-	"github.com/admin8800/s-ui/logger"
-	"github.com/admin8800/s-ui/service"
-	"github.com/admin8800/s-ui/sub"
-	"github.com/admin8800/s-ui/web"
+	"github.com/chihiroecho-eng/s-ui/config"
+	"github.com/chihiroecho-eng/s-ui/core"
+	"github.com/chihiroecho-eng/s-ui/cronjob"
+	"github.com/chihiroecho-eng/s-ui/database"
+	"github.com/chihiroecho-eng/s-ui/logger"
+	"github.com/chihiroecho-eng/s-ui/service"
+	"github.com/chihiroecho-eng/s-ui/sub"
+	"github.com/chihiroecho-eng/s-ui/web"
 
 	"github.com/op/go-logging"
 )

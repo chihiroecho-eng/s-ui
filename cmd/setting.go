@@ -8,9 +8,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/admin8800/s-ui/config"
-	"github.com/admin8800/s-ui/database"
-	"github.com/admin8800/s-ui/service"
+	"github.com/chihiroecho-eng/s-ui/config"
+	"github.com/chihiroecho-eng/s-ui/database"
+	"github.com/chihiroecho-eng/s-ui/service"
 
 	"github.com/shirou/gopsutil/v4/net"
 )

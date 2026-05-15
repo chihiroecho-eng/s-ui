@@ -3,9 +3,9 @@ package sub
 import (
 	"strings"
 
-	"github.com/admin8800/s-ui/logger"
-	"github.com/admin8800/s-ui/service"
-	"github.com/admin8800/s-ui/util"
+	"github.com/chihiroecho-eng/s-ui/logger"
+	"github.com/chihiroecho-eng/s-ui/service"
+	"github.com/chihiroecho-eng/s-ui/util"
 
 	"gopkg.in/yaml.v3"
 )

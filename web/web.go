@@ -13,12 +13,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/admin8800/s-ui/api"
-	"github.com/admin8800/s-ui/config"
-	"github.com/admin8800/s-ui/logger"
-	"github.com/admin8800/s-ui/middleware"
-	"github.com/admin8800/s-ui/network"
-	"github.com/admin8800/s-ui/service"
+	"github.com/chihiroecho-eng/s-ui/api"
+	"github.com/chihiroecho-eng/s-ui/config"
+	"github.com/chihiroecho-eng/s-ui/logger"
+	"github.com/chihiroecho-eng/s-ui/middleware"
+	"github.com/chihiroecho-eng/s-ui/network"
+	"github.com/chihiroecho-eng/s-ui/service"
 
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/sessions"

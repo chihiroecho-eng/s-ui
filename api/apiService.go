@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/admin8800/s-ui/database"
-	"github.com/admin8800/s-ui/logger"
-	"github.com/admin8800/s-ui/service"
-	"github.com/admin8800/s-ui/util"
+	"github.com/chihiroecho-eng/s-ui/database"
+	"github.com/chihiroecho-eng/s-ui/logger"
+	"github.com/chihiroecho-eng/s-ui/service"
+	"github.com/chihiroecho-eng/s-ui/util"
 
 	"github.com/gin-gonic/gin"
 )

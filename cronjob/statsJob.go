@@ -1,8 +1,8 @@
 package cronjob
 
 import (
-	"github.com/admin8800/s-ui/logger"
-	"github.com/admin8800/s-ui/service"
+	"github.com/chihiroecho-eng/s-ui/logger"
+	"github.com/chihiroecho-eng/s-ui/service"
 )
 
 type StatsJob struct {

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/admin8800/s-ui/database"
-	"github.com/admin8800/s-ui/database/model"
-	"github.com/admin8800/s-ui/service"
-	"github.com/admin8800/s-ui/util"
+	"github.com/chihiroecho-eng/s-ui/database"
+	"github.com/chihiroecho-eng/s-ui/database/model"
+	"github.com/chihiroecho-eng/s-ui/service"
+	"github.com/chihiroecho-eng/s-ui/util"
 )
 
 const defaultJson = `

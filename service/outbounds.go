@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/admin8800/s-ui/database"
-	"github.com/admin8800/s-ui/database/model"
-	"github.com/admin8800/s-ui/util/common"
+	"github.com/chihiroecho-eng/s-ui/database"
+	"github.com/chihiroecho-eng/s-ui/database/model"
+	"github.com/chihiroecho-eng/s-ui/util/common"
 
 	"gorm.io/gorm"
 )

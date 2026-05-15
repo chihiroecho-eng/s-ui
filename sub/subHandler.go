@@ -1,8 +1,8 @@
 package sub
 
 import (
-	"github.com/admin8800/s-ui/logger"
-	"github.com/admin8800/s-ui/service"
+	"github.com/chihiroecho-eng/s-ui/logger"
+	"github.com/chihiroecho-eng/s-ui/service"
 
 	"github.com/gin-gonic/gin"
 )

@@ -33,9 +33,7 @@ RUN CRONET_ARCH="${TARGETARCH:-amd64}" && \
 COPY . .
 COPY --from=front-builder /app/dist/ /app/web/html/
 
-RUN sed -i 's#module github.com/chihiroecho-eng/s-ui#module github.com/admin8800/s-ui#' go.mod && \
-    sed -i 's#github.com/chihiroecho-eng/s-ui#github.com/admin8800/s-ui#g' main.go && \
-    if [ "$TARGETARCH" = "arm" ]; then export GOARM=7; [ "$TARGETVARIANT" = "v6" ] && export GOARM=6; fi; \
+RUN if [ "$TARGETARCH" = "arm" ]; then export GOARM=7; [ "$TARGETVARIANT" = "v6" ] && export GOARM=6; fi; \
     go build -ldflags="-w -s" \
     -tags "with_quic,with_grpc,with_utls,with_acme,with_gvisor,with_naive_outbound,with_purego,with_tailscale" \
     -o sui main.go
