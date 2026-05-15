@@ -1,11 +1,11 @@
 FROM --platform=$BUILDPLATFORM node:alpine AS front-builder
 WORKDIR /app
 COPY frontend/ ./
-RUN npm install && npm run build
+RUN npm ci && npm run build
 
 FROM golang:1.25-alpine AS backend-builder
 WORKDIR /app
-ARG TARGETARCH
+ARG TARGETARCH=amd64
 ARG TARGETVARIANT
 ENV CGO_ENABLED=1
 ENV CGO_CFLAGS="-D_LARGEFILE64_SOURCE"
@@ -24,7 +24,7 @@ RUN apk update && apk add --no-cache \
 
 ENV CC=gcc
 
-RUN CRONET_ARCH="$TARGETARCH" && \
+RUN CRONET_ARCH="${TARGETARCH:-amd64}" && \
     CRONET_URL="https://github.com/SagerNet/cronet-go/releases/latest/download/libcronet-linux-${CRONET_ARCH}.so"; \
     echo "Downloading $CRONET_URL" && \
     wget -q -O ./libcronet.so "$CRONET_URL" && \
