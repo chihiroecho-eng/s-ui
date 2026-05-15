@@ -136,21 +136,21 @@ download_release() {
 
     if [[ -z "$version" ]]; then
         url="https://github.com/chihiroecho-eng/s-ui/releases/latest/download/${asset}"
-        echo -e "开始安装 s-ui 最新版本（${asset}）..."
+        echo -e "开始安装 s-ui 最新版本（${asset}）..." >&2
     else
         [[ "$version" != v* ]] && version="v${version}"
         url="https://github.com/chihiroecho-eng/s-ui/releases/download/${version}/${asset}"
-        echo -e "开始安装 s-ui ${version}（${asset}）..."
+        echo -e "开始安装 s-ui ${version}（${asset}）..." >&2
     fi
 
-    wget -O "/tmp/${asset}" --no-check-certificate "$url"
+    wget -O "/tmp/${asset}" --no-check-certificate "$url" >&2
     if [[ $? -ne 0 ]]; then
-        echo -e "${red}下载 ${asset} 失败，请确认 Release 已发布且包含该架构资产：${url}${plain}"
+        echo -e "${red}下载 ${asset} 失败，请确认 Release 已发布且包含该架构资产：${url}${plain}" >&2
         exit 1
     fi
 
     if ! tar -tzf "/tmp/${asset}" >/dev/null 2>&1; then
-        echo -e "${red}下载的 ${asset} 不是有效的 tar.gz 文件，请检查 Release 资产是否正确。${plain}"
+        echo -e "${red}下载的 ${asset} 不是有效的 tar.gz 文件，请检查 Release 资产是否正确。${plain}" >&2
         rm -f "/tmp/${asset}"
         exit 1
     fi
